@@ -19,8 +19,18 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.edc.aws.s3.core)
+    implementation(libs.edc.aws.data.plane.s3)
+
     runtimeOnly(libs.edc.bom.dataplane)
     runtimeOnly(libs.edc.dataplane.v2)
+
+
+    
+    // S3 support for data plane
+    // Note: This may need to be adjusted based on actual EDC version and available extensions
+    // If data-plane-s3 extension is not available, HTTP can be used as fallback
+    runtimeOnly(libs.edc.aws.validator.data.address.s3)
 
     if (project.properties.getOrDefault("persistence", "false") == "true") {
         runtimeOnly(libs.edc.vault.hashicorp)

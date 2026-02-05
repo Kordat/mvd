@@ -1,0 +1,86 @@
+#
+#  Copyright (c) 2024 Metaform Systems, Inc.
+#
+#  This program and the accompanying materials are made available under the
+#  terms of the Apache License, Version 2.0 which is available at
+#  https://www.apache.org/licenses/LICENSE-2.0
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+#  Contributors:
+#       Metaform Systems, Inc. - initial API and implementation
+#
+
+# This file deploys all the components needed for the consumer side of the scenario,
+# i.e. the connector, an identityhub and a vault.
+
+#
+resource "kubernetes_namespace_v1" "ns_participant" {
+  metadata {
+    name = var.participant
+  }
+}
+
+# connector
+module "participant-connector" {
+  source            = "./modules/connector"
+  humanReadableName = var.participant
+  participantId     = local.participant-did
+  controlplane_image = var.controlplane_image
+  dataplane_image   = var.dataplane_image
+  database = {
+    user     = var.participant
+    password = random_password.participant_password.result
+    url      = local.database_url
+  }
+  vault-url                = local.vault_url
+  namespace                = kubernetes_namespace_v1.ns_participant.metadata.0.name
+  sts-token-url            = "${module.participant-identityhub.sts-token-url}/token"
+  useSVE                   = var.useSVE
+  s3_endpoint              = "https://${module.assets_s3_bucket.bucket_name}.s3.eu-west-1.amazonaws.com"
+  # aws_access_key           = aws_iam_access_key.deployer.id
+  # aws_secret_key           = aws_iam_access_key.deployer.secret
+  service_account_role_arn = module.participant-s3-role.role_arn
+  management_auth_key      = var.participant_management_auth_key
+}
+
+# consumer identity hub
+module "participant-identityhub" {
+  depends_on        = [module.participant-vault]
+  source            = "./modules/identity-hub"
+  credentials-dir   = "./assets/credentials/k8s/${var.participant}"
+  humanReadableName = "${var.participant}-identityhub"
+  participantId     = local.participant-did
+  vault-url         = local.vault_url
+  service-name      = var.participant
+  identityhub_image = var.identityhub_image
+  identity_auth_key = var.participant_management_auth_key
+  database = {
+    user     = var.participant
+    password = random_password.participant_password.result
+    url      = local.database_url
+  }
+  namespace = kubernetes_namespace_v1.ns_participant.metadata.0.name
+  useSVE    = var.useSVE
+}
+
+# participant vault
+module "participant-vault" {
+  source            = "./modules/vault"
+  humanReadableName = "${var.participant}-vault"
+  namespace         = kubernetes_namespace_v1.ns_participant.metadata.0.name
+}
+
+# Seed Vault with participant private key from assets/<participant>_private.pem (produced by produce_participant_credentials.sh)
+resource "null_resource" "seed_vault_participant_key" {
+  count      = fileexists("${path.module}/assets/${var.participant}_private.pem") ? 1 : 0
+  depends_on = [module.participant-vault]
+  triggers = {
+    participant = var.participant
+    pem         = fileexists("${path.module}/assets/${var.participant}_private.pem") ? filemd5("${path.module}/assets/${var.participant}_private.pem") : "no-file"
+  }
+  provisioner "local-exec" {
+    command     = "chmod +x scripts/seed_vault_participant_key.sh && ./scripts/seed_vault_participant_key.sh ${var.participant}"
+    working_dir = path.module
+  }
+}
