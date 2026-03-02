@@ -181,5 +181,9 @@ resource "kubernetes_config_map" "connector-config" {
     EDC_IAM_STS_OAUTH_TOKEN_URL           = var.sts-token-url
     EDC_IAM_STS_OAUTH_CLIENT_ID           = var.participantId
     EDC_IAM_STS_OAUTH_CLIENT_SECRET_ALIAS = "${var.participantId}-sts-client-secret"
+
+    # OpenTelemetry Logs
+    EDC_OTEL_LOGS_ENDPOINT     = "http://otel-collector.mvd.svc.cluster.local:4317"
+    EDC_OTEL_LOGS_SERVICE_NAME = "${var.humanReadableName}-controlplane"
   }
 }
