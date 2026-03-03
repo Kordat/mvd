@@ -11,7 +11,7 @@
 #       Metaform Systems, Inc. - initial API and implementation
 #
 
-resource "kubernetes_deployment" "identityhub" {
+resource "kubernetes_deployment_v1" "identityhub" {
   metadata {
     name      = lower(var.humanReadableName)
     namespace = var.namespace

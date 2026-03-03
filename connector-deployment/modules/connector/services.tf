@@ -25,7 +25,7 @@ resource "kubernetes_service" "controlplane-service" {
   spec {
     type = "NodePort"
     selector = {
-      App = kubernetes_deployment.controlplane.spec.0.template.0.metadata[0].labels.App
+      App = kubernetes_deployment_v1.controlplane.spec.0.template.0.metadata[0].labels.App
     }
     port {
       name = "health"
@@ -62,7 +62,7 @@ resource "kubernetes_service" "dataplane-service" {
   spec {
     type = "NodePort"
     selector = {
-      App = kubernetes_deployment.dataplane.spec.0.template.0.metadata[0].labels.App
+      App = kubernetes_deployment_v1.dataplane.spec.0.template.0.metadata[0].labels.App
     }
     port {
       name = "control"

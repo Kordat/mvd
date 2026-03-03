@@ -17,9 +17,9 @@
 #  SPDX-License-Identifier: Apache-2.0
 #
 
-resource "kubernetes_deployment" "dataplane" {
+resource "kubernetes_deployment_v1" "dataplane" {
   # needs a hard dependency, otherwise the dataplane registration fails, and it is not retried
-  depends_on = [kubernetes_deployment.controlplane]
+  depends_on = [kubernetes_deployment_v1.controlplane]
   metadata {
     name      = "${lower(var.humanReadableName)}-dataplane"
     namespace = var.namespace

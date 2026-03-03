@@ -17,7 +17,7 @@
 #  SPDX-License-Identifier: Apache-2.0
 #
 
-resource "kubernetes_deployment" "controlplane" {
+resource "kubernetes_deployment_v1" "controlplane" {
   metadata {
     name      = "${lower(var.humanReadableName)}-controlplane"
     namespace = var.namespace
