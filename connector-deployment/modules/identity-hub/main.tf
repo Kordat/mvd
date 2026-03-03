@@ -36,6 +36,7 @@ resource "kubernetes_deployment" "identityhub" {
       }
 
       spec {
+        node_selector = var.node_pool_label
         container {
           image_pull_policy = "IfNotPresent"
           image             = var.identityhub_image

@@ -23,11 +23,11 @@ resource "kubernetes_namespace_v1" "ns_participant" {
 
 # connector
 module "participant-connector" {
-  source            = "./modules/connector"
-  humanReadableName = var.participant
-  participantId     = local.participant-did
+  source             = "./modules/connector"
+  humanReadableName  = var.participant
+  participantId      = local.participant-did
   controlplane_image = var.controlplane_image
-  dataplane_image   = var.dataplane_image
+  dataplane_image    = var.dataplane_image
   database = {
     user     = var.participant
     password = random_password.participant_password.result
@@ -38,10 +38,11 @@ module "participant-connector" {
   sts-token-url            = "${module.participant-identityhub.sts-token-url}/token"
   useSVE                   = var.useSVE
   s3_endpoint              = "https://${module.assets_s3_bucket.bucket_name}.s3.eu-west-1.amazonaws.com"
-  # aws_access_key           = aws_iam_access_key.deployer.id
-  # aws_secret_key           = aws_iam_access_key.deployer.secret
   service_account_role_arn = module.participant-s3-role.role_arn
   management_auth_key      = var.participant_management_auth_key
+  node_pool_label          = var.node_pool_label
+  # aws_access_key           = aws_iam_access_key.deployer.id
+  # aws_secret_key           = aws_iam_access_key.deployer.secret
 }
 
 # consumer identity hub
@@ -60,8 +61,9 @@ module "participant-identityhub" {
     password = random_password.participant_password.result
     url      = local.database_url
   }
-  namespace = kubernetes_namespace_v1.ns_participant.metadata.0.name
-  useSVE    = var.useSVE
+  namespace       = kubernetes_namespace_v1.ns_participant.metadata.0.name
+  useSVE          = var.useSVE
+  node_pool_label = var.node_pool_label
 }
 
 # participant vault

@@ -45,6 +45,7 @@ resource "kubernetes_deployment" "dataplane" {
 
       spec {
         service_account_name = kubernetes_service_account.s3_sa.metadata[0].name
+        node_selector = var.node_pool_label
         container {
           name              = "dataplane-${lower(var.humanReadableName)}"
           image             = var.dataplane_image
