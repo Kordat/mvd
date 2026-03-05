@@ -56,6 +56,14 @@ variable "ports" {
   }
 }
 
+variable "node_pool_label" {
+  type        = map(string)
+  description = "Label to define nodeSelector"
+  default = {
+    role = "application"
+  }
+}
+
 variable "credentials-dir" {
   type        = string
   description = "JSON object containing the credentials to seed, sorted by human-readable participant name"

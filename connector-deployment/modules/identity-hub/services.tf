@@ -19,7 +19,7 @@ resource "kubernetes_service" "ih-service" {
   spec {
     type = "NodePort"
     selector = {
-      App = kubernetes_deployment.identityhub.spec.0.template.0.metadata[0].labels.App
+      App = kubernetes_deployment_v1.identityhub.spec.0.template.0.metadata[0].labels.App
     }
     # we need a stable IP, otherwise there will be a cycle with the issuer
     port {

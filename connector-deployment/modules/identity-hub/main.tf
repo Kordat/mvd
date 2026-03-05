@@ -11,7 +11,7 @@
 #       Metaform Systems, Inc. - initial API and implementation
 #
 
-resource "kubernetes_deployment" "identityhub" {
+resource "kubernetes_deployment_v1" "identityhub" {
   metadata {
     name      = lower(var.humanReadableName)
     namespace = var.namespace
@@ -36,6 +36,7 @@ resource "kubernetes_deployment" "identityhub" {
       }
 
       spec {
+        node_selector = var.node_pool_label
         container {
           image_pull_policy = "IfNotPresent"
           image             = var.identityhub_image

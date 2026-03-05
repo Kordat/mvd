@@ -151,3 +151,11 @@ variable "management_auth_key" {
   description = "Default API key for Management and Catalog APIs (x-api-key). For Kordat-managed participants the key is created once in Kordat and distributed via K8s patch (this value is then overwritten). Use a fixed value for testing or leave default 'password' for seed scripts."
   default     = "password"
 }
+
+variable "node_pool_label" {
+  type        = map(string)
+  description = "Label to define nodeSelector"
+  default = {
+    role = "application"
+  }
+}
