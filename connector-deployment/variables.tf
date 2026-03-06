@@ -27,7 +27,7 @@ variable "environment" {
 
 variable "postgres_endpoint" {
   type = string
-  default = "kordat-dev-participants-database.cnsm066acc36.eu-west-1.rds.amazonaws.com"
+  default = "kordat-pro-participants-database.chy04w0ikvcx.eu-west-1.rds.amazonaws.com" 
 }
 
 variable "postgres_port" {
