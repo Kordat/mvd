@@ -39,7 +39,7 @@ terraform {
 
   backend "s3" {
     region  = "eu-west-1"
-    bucket  = "aie-kordat-dev-terraform-remote-state"
+    bucket  = "aie-kordat-<ENV>-terraform-remote-state"
     key     = "infra/kordat/<PARTICIPANTE>/terraform.tfstate"
   }
 
