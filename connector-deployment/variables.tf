@@ -25,11 +25,6 @@ variable "environment" {
   type = string
 }
 
-variable "postgres_endpoint" {
-  type = string
-  default = "kordat-dev-participants-database.cnsm066acc36.eu-west-1.rds.amazonaws.com"
-}
-
 variable "postgres_port" {
   type = number
   default = 5432
@@ -52,11 +47,6 @@ variable "useSVE" {
 
 # MVD component image versions are upgraded here (connector-deployment), not in the Kordat project.
 # The Control Plane stores STS client secrets in Vault; upgrading its image may change Vault key behaviour.
-variable "ecr_prefix" {
-  type        = string
-  description = "ECR prefix to create images urls"
-  default     = "150073872684.dkr.ecr.eu-west-1.amazonaws.com/kordat-dev"
-}
 
 variable "ecr_tag" {
   type = string

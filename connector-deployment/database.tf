@@ -5,7 +5,7 @@ resource "random_password" "participant_password" {
 }
 
 provider "postgresql" {
-  host            = var.postgres_endpoint
+  host            = data.aws_db_instance.rds.address
   port            = var.postgres_port
   database        = "participants"
   username        = "dbadmin"
