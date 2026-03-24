@@ -52,22 +52,15 @@ variable "useSVE" {
 
 # MVD component image versions are upgraded here (connector-deployment), not in the Kordat project.
 # The Control Plane stores STS client secrets in Vault; upgrading its image may change Vault key behaviour.
-variable "controlplane_image" {
+variable "ecr_prefix" {
   type        = string
-  description = "Control Plane (connector) image. Upgrade tag here when releasing new MVD/EDC versions."
-  default     = "150073872684.dkr.ecr.eu-west-1.amazonaws.com/kordat-dev-controlplane:a648c9f6"
+  description = "ECR prefix to create images urls"
+  default     = "150073872684.dkr.ecr.eu-west-1.amazonaws.com/kordat-dev"
 }
 
-variable "dataplane_image" {
-  type        = string
-  description = "Data Plane image. Upgrade tag here when releasing new MVD/EDC versions."
-  default     = "150073872684.dkr.ecr.eu-west-1.amazonaws.com/kordat-dev-dataplane:a648c9f6"
-}
-
-variable "identityhub_image" {
-  type        = string
-  description = "Identity Hub image. Upgrade tag here when releasing new MVD/EDC versions."
-  default     = "150073872684.dkr.ecr.eu-west-1.amazonaws.com/kordat-dev-identity-hub:a648c9f6"
+variable "ecr_tag" {
+  type = string
+  description = "Tag of the image to deploy"
 }
 
 variable "participant_management_auth_key" {

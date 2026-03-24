@@ -26,8 +26,8 @@ module "participant-connector" {
   source             = "./modules/connector"
   humanReadableName  = var.participant
   participantId      = local.participant-did
-  controlplane_image = var.controlplane_image
-  dataplane_image    = var.dataplane_image
+  controlplane_image = local.controlplane_image
+  dataplane_image    = local.dataplane_image
   database = {
     user     = var.participant
     password = random_password.participant_password.result
@@ -54,7 +54,7 @@ module "participant-identityhub" {
   participantId     = local.participant-did
   vault-url         = local.vault_url
   service-name      = var.participant
-  identityhub_image = var.identityhub_image
+  identityhub_image = local.identityhub_image
   identity_auth_key = var.participant_management_auth_key
   database = {
     user     = var.participant
