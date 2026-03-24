@@ -51,6 +51,7 @@ variable "useSVE" {
 variable "ecr_tag" {
   type = string
   description = "Tag of the image to deploy"
+
 }
 
 variable "participant_management_auth_key" {
