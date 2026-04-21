@@ -95,7 +95,7 @@ module "issuer_password" {
       encrypted = false
     },
     {
-      name      = "hostname"
+      name      = "host"
       value     = data.aws_db_instance.rds.address
       encrypted = false
     },
@@ -105,16 +105,14 @@ module "issuer_password" {
       encrypted = false
     },
     {
-      name      = "user"
+      name      = "username"
       value     = var.issuer_name
       encrypted = false
     },
     {
-      name      = "name"
+      name      = "database"
       value     = var.issuer_name
       encrypted = false
     }
-
   ]
-
 }
