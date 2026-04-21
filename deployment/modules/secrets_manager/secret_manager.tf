@@ -1,7 +1,12 @@
+locals {
+  encrypted_secrets = { for each in var.secrets : each.name => each.value if each.encrypted }
+}
+
 data "aws_kms_secrets" "secrets" {
-  # Fetch only the secrets that need encryption
+  count = length(local.encrypted_secrets) > 0 ? 1 : 0
+
   dynamic "secret" {
-    for_each = { for each in var.secrets : each.name => each.value if each.encrypted }
+    for_each = local.encrypted_secrets
     iterator = secret
     content {
       name    = secret.key
@@ -13,7 +18,7 @@ data "aws_kms_secrets" "secrets" {
 locals {
   # Merge encrypted and plain secrets
   secret_values = { for each in var.secrets : each.name => (
-    each.encrypted ? data.aws_kms_secrets.secrets.plaintext[each.name] : each.value
+    each.encrypted ? data.aws_kms_secrets.secrets[0].plaintext[each.name] : each.value
   ) }
 }
 
