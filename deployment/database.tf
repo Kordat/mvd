@@ -84,7 +84,7 @@ resource "null_resource" "issuer_schema_and_seeds" {
 # Store random password
 module "issuer_password" {
   source = "./modules/secrets_manager"
-  name = "issuer_db_credentials"
+  name = "issuer-db-credentials"
   application = "secrets"
   project = var.project
   environment = var.environment
