@@ -16,9 +16,9 @@ module "dataspace-issuer" {
   humanReadableName = "dataspace-issuer-service"
   participantId     = "example" #var.consumer-did
   database = {
-    user     = "issuer"
-    password = "issuer"
-    url      = "jdbc:postgresql://${module.dataspace-issuer-postgres.database-url}/issuer"
+    user     = var.issuer_name
+    password = "issuer" #random_password.issuer_password.result
+    url      = "jdbc:postgresql://${module.dataspace-issuer-postgres.database-url}/issuer" #data.aws_db_instance.rds.endpoint
   }
   image     = local.issuer_image
   vault-url = "http://issuer-vault.${var.project}.svc.cluster.local:8200"
