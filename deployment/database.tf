@@ -83,17 +83,38 @@ resource "null_resource" "issuer_schema_and_seeds" {
 
 # Store random password
 module "issuer_password" {
-  source = "./modules/secrets_manager"
-  name = "issuer-db-credentials"
+  source      = "./modules/secrets_manager"
+  name        = "issuer-db-credentials"
   application = "secrets"
-  project = var.project
+  project     = var.project
   environment = var.environment
   secrets = [
     {
-    name      = "password"
-    value     = random_password.issuer_password.result
-    encrypted = false
-  }
+      name      = "password"
+      value     = random_password.issuer_password.result
+      encrypted = false
+    },
+    {
+      name      = "hostname"
+      value     = data.aws_db_instance.rds.address
+      encrypted = false
+    },
+    {
+      name      = "port"
+      value     = 5432
+      encrypted = false
+    },
+    {
+      name      = "user"
+      value     = var.issuer_name
+      encrypted = false
+    },
+    {
+      name      = "name"
+      value     = var.issuer_name
+      encrypted = false
+    }
+
   ]
-  
+
 }
