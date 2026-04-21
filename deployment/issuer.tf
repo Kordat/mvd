@@ -44,7 +44,7 @@ module "dataspace-issuer-postgres" {
 }
 
 # DB initialization for the EDC database
-resource "kubernetes_config_map" "issuer-initdb-config" {
+resource "kubernetes_config_map_v1" "issuer-initdb-config" {
   metadata {
     name      = "issuer-initdb-config"
     namespace = var.project #kubernetes_namespace.ns.metadata.0.name
