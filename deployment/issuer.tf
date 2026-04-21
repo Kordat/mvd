@@ -35,7 +35,7 @@ module "dataspace-issuer-vault" {
 
 # Postgres database for the consumer
 module "dataspace-issuer-postgres" {
-  depends_on       = [kubernetes_config_map.issuer-initdb-config]
+  depends_on       = [kubernetes_config_map_v1.issuer-initdb-config]
   source           = "./modules/postgres"
   instance-name    = "issuer"
   init-sql-configs = ["issuer-initdb-config"]

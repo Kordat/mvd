@@ -33,6 +33,9 @@ terraform {
     postgresql = {
       source = "cyrilgdn/postgresql"
     }
+    null = {
+      source = "hashicorp/null"
+    }
   }
 
   backend "s3" {

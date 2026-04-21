@@ -46,27 +46,37 @@ resource "postgresql_grant" "schema_privs" {
 }
 
 # Crea la tabla membership_attestations y los datos semilla del issuer
-resource "postgresql_script" "issuer_schema_and_seeds" {
+resource "null_resource" "issuer_schema_and_seeds" {
   depends_on = [
     postgresql_grant.db_privs,
     postgresql_grant.schema_privs,
   ]
 
-  database = postgresql_database.issuer_database.name
+  provisioner "local-exec" {
+    environment = {
+      PGPASSWORD = random_password.issuer_password.result
+    }
 
-  create_script = <<-EOT
-    CREATE TABLE IF NOT EXISTS membership_attestations (
-      id                    VARCHAR DEFAULT gen_random_uuid() NOT NULL PRIMARY KEY,
-      membership_type       INTEGER DEFAULT 0,
-      holder_id             VARCHAR NOT NULL,
-      membership_start_date TIMESTAMP DEFAULT now() NOT NULL
-    );
+    command = <<-EOT
+      psql -h ${data.aws_db_instance.rds.address} \
+           -p ${var.postgres_port} \
+           -U ${var.issuer_name} \
+           -d ${var.issuer_name} \
+           -c "
+        CREATE TABLE IF NOT EXISTS membership_attestations (
+          id                    VARCHAR DEFAULT gen_random_uuid() NOT NULL PRIMARY KEY,
+          membership_type       INTEGER DEFAULT 0,
+          holder_id             VARCHAR NOT NULL,
+          membership_start_date TIMESTAMP DEFAULT now() NOT NULL
+        );
 
-    CREATE UNIQUE INDEX IF NOT EXISTS membership_attestation_holder_id_uindex
-      ON membership_attestations (holder_id);
-  EOT
+        CREATE UNIQUE INDEX IF NOT EXISTS membership_attestation_holder_id_uindex
+          ON membership_attestations (holder_id);
+      "
+    EOT
+  }
 
-  delete_script = <<-EOT
-    DROP TABLE IF EXISTS membership_attestations;
-  EOT
+  triggers = {
+    schema_hash = sha256("membership_attestations_v1_consumer_provider")
+  }
 }
