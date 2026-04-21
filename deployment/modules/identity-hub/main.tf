@@ -11,7 +11,7 @@
 #       Metaform Systems, Inc. - initial API and implementation
 #
 
-resource "kubernetes_deployment" "identityhub" {
+resource "kubernetes_deployment_v1" "identityhub" {
   metadata {
     name      = lower(var.humanReadableName)
     namespace = var.namespace
@@ -36,6 +36,7 @@ resource "kubernetes_deployment" "identityhub" {
       }
 
       spec {
+        node_selector = var.node_group_label
         container {
           image_pull_policy = "IfNotPresent"
           image             = "150073872684.dkr.ecr.eu-west-1.amazonaws.com/kordat-dev-identity-hub:latest"

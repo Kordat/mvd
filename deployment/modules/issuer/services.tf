@@ -19,7 +19,7 @@ resource "kubernetes_service" "issuerservice-service" {
   spec {
     type = "NodePort"
     selector = {
-      App = kubernetes_deployment.issuerservice.spec.0.template.0.metadata[0].labels.App
+      App = kubernetes_deployment_v1.issuerservice.spec.0.template.0.metadata[0].labels.App
     }
     port {
       name = "web"

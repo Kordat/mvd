@@ -27,3 +27,16 @@ variable "init-sql-configs" {
 variable "namespace" {
   description = "kubernetes namespace where the PG instance is deployed"
 }
+
+variable "image" {
+  type = string
+  description = "Docker image"
+}
+
+variable "node_group_label" {
+  type        = map(string)
+  description = "Label to define nodeSelector"
+  default = {
+    role = "application"
+  }
+}

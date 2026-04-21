@@ -17,16 +17,45 @@
 #  SPDX-License-Identifier: Apache-2.0
 #
 
-variable "consumer-did" {
-  default = "did:web:consumer-identityhub%3A7083:consumer"
+variable "environment" {
+  type    = string
+  default = "dev"
 }
 
-variable "provider-did" {
-  default = "did:web:provider-identityhub%3A7083:provider"
+variable "project" {
+  type    = string
+  default = var.project
+}
+
+variable "issuer_name" {
+  type    = string
+  default = "issuer"
+}
+
+variable "postgres_port" {
+  type    = number
+  default = 5432
+}
+
+variable "postgres_admin_password" {
+  type = string
+}
+
+variable "ecr_tag" {
+  type    = string
+  default = "latest"
 }
 
 variable "useSVE" {
   type        = bool
   description = "If true, the -XX:UseSVE=0 switch (Scalable Vector Extensions) will be added to the JAVA_TOOL_OPTIONS. Can help on macOs on Apple Silicon processors"
   default     = false
+}
+
+variable "node_group_label" {
+  type        = map(string)
+  description = "Label to define nodeSelector"
+  default = {
+    role = "application"
+  }
 }

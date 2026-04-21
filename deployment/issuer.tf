@@ -14,15 +14,23 @@
 module "dataspace-issuer" {
   source            = "./modules/issuer"
   humanReadableName = "dataspace-issuer-service"
-  participantId     = var.consumer-did
+  participantId     = "example" #var.consumer-did
   database = {
     user     = "issuer"
     password = "issuer"
     url      = "jdbc:postgresql://${module.dataspace-issuer-postgres.database-url}/issuer"
   }
-  vault-url = "http://consumer-vault.consumer.svc.cluster.local:8200"
-  namespace = "kordat" #kubernetes_namespace.ns.metadata.0.name
+  image     = local.issuer_image
+  vault-url = "http://issuer-vault.${var.project}.svc.cluster.local:8200"
+  namespace = var.project
   useSVE    = var.useSVE
+}
+
+# issuer vault
+module "dataspace-issuer-vault" {
+  source            = "./modules/vault"
+  humanReadableName = "issuer-vault"
+  namespace         = var.project #kubernetes_namespace.ns.metadata.0.name
 }
 
 # Postgres database for the consumer
@@ -31,14 +39,15 @@ module "dataspace-issuer-postgres" {
   source           = "./modules/postgres"
   instance-name    = "issuer"
   init-sql-configs = ["issuer-initdb-config"]
-  namespace        = "kordat" #kubernetes_namespace.ns.metadata.0.name
+  namespace        = var.project #kubernetes_namespace.ns.metadata.0.name
+  image            = "150073872684.dkr.ecr.eu-west-1.amazonaws.com/kordat-dev-postgres:16.3-alpine3.20"
 }
 
 # DB initialization for the EDC database
 resource "kubernetes_config_map" "issuer-initdb-config" {
   metadata {
     name      = "issuer-initdb-config"
-    namespace = "kordat" #kubernetes_namespace.ns.metadata.0.name
+    namespace = var.project #kubernetes_namespace.ns.metadata.0.name
   }
   data = {
     "issuer-initdb-config.sql" = <<-EOT

@@ -18,10 +18,10 @@
 #
 
 
-resource "kubernetes_deployment" "dataspace-issuer-did-server" {
+resource "kubernetes_deployment_v1" "dataspace-issuer-did-server" {
   metadata {
     name      = "dataspace-issuer-server"
-    namespace = "kordat" #kubernetes_namespace.ns.metadata.0.name
+    namespace = var.project #kubernetes_namespace.ns.metadata.0.name
     labels = {
       App = "dataspace-issuer-server"
     }
@@ -43,6 +43,8 @@ resource "kubernetes_deployment" "dataspace-issuer-did-server" {
       }
 
       spec {
+
+        node_selector = var.node_group_label
 
         container {
           image_pull_policy = "IfNotPresent"
@@ -82,12 +84,12 @@ resource "kubernetes_deployment" "dataspace-issuer-did-server" {
 resource "kubernetes_service" "dataspace-issuer-did-server-service" {
   metadata {
     name      = "dataspace-issuer" # this must correlate with the Issuer's DID: did:web:dataspace-issuer -> http://dataspace-issuer/.well-known/did.json
-    namespace = "kordat" #kubernetes_namespace.ns.metadata.0.name
+    namespace = var.project #kubernetes_namespace.ns.metadata.0.name
   }
   spec {
     type = "NodePort"
     selector = {
-      App = kubernetes_deployment.dataspace-issuer-did-server.spec.0.template.0.metadata[0].labels.App
+      App = kubernetes_deployment_v1.dataspace-issuer-did-server.spec.0.template.0.metadata[0].labels.App
     }
     # we need a stable IP, otherwise there will be a cycle with the issuer
     port {
@@ -100,7 +102,7 @@ resource "kubernetes_service" "dataspace-issuer-did-server-service" {
 resource "kubernetes_config_map" "nginx-map" {
   metadata {
     name      = "nginx-conf"
-    namespace = "kordat" #kubernetes_namespace.ns.metadata.0.name
+    namespace = var.project #kubernetes_namespace.ns.metadata.0.name
   }
 
   data = {

@@ -11,7 +11,7 @@
 #       Cofinity-X - initial API and implementation
 #
 
-resource "kubernetes_deployment" "issuerservice" {
+resource "kubernetes_deployment_v1" "issuerservice" {
   metadata {
     name      = lower(var.humanReadableName)
     namespace = var.namespace
@@ -36,9 +36,10 @@ resource "kubernetes_deployment" "issuerservice" {
       }
 
       spec {
+        node_selector = var.node_group_label
         container {
           image_pull_policy = "IfNotPresent"
-          image             = "150073872684.dkr.ecr.eu-west-1.amazonaws.com/kordat-dev-issuerservice:latest"
+          image             = var.image
           name              = "issuerservice"
 
           env_from {

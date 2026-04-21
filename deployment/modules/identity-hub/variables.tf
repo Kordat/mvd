@@ -35,6 +35,14 @@ variable "namespace" {
   type = string
 }
 
+variable "node_group_label" {
+  type        = map(string)
+  description = "Label to define nodeSelector"
+  default = {
+    role = "application"
+  }
+}
+
 variable "ports" {
   type = object({
     web             = number

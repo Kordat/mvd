@@ -30,13 +30,16 @@ terraform {
       // used for Hashicorp Vault
       source = "hashicorp/helm"
     }
+    postgresql = {
+      source = "cyrilgdn/postgresql"
+    }
   }
 
   backend "s3" {
     region  = "eu-west-1"
-    bucket  = "aie-kordat-dev-terraform-remote-state"
+    bucket  = "aie-kordat-<ENV>-terraform-remote-state"
     key     = "infra/kordat/mvd/terraform.tfstate"
-    profile = "kordat-dev"
+    profile = "kordat-<ENV>"
   }
 
   required_version = ">= 1.13.0"
