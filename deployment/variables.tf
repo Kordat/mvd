@@ -24,7 +24,7 @@ variable "environment" {
 
 variable "project" {
   type    = string
-  default = var.project
+  default = "kordat"
 }
 
 variable "issuer_name" {
