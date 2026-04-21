@@ -80,3 +80,20 @@ resource "null_resource" "issuer_schema_and_seeds" {
     schema_hash = sha256("membership_attestations_v1_consumer_provider")
   }
 }
+
+# Store random password
+module "issuer_password" {
+  source = "./modules/secrets_manager"
+  name = "issuer_db_credentials"
+  application = "secrets"
+  project = var.project
+  environment = var.environment
+  secrets = [
+    {
+    name      = "password"
+    value     = random_password.issuer_password.result
+    encrypted = false
+  }
+  ]
+  
+}
