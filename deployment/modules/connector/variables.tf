@@ -70,6 +70,14 @@ variable "database" {
   })
 }
 
+variable "node_group_label" {
+  type        = map(string)
+  description = "Label to define nodeSelector"
+  default = {
+    role = "application"
+  }
+}
+
 variable "participant-list-file" {
   type    = string
   default = "./assets/participants/participants.k8s.json"

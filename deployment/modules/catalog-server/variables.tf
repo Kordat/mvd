@@ -115,3 +115,11 @@ locals {
   controlplane-service-name = "${var.humanReadableName}-controlplane"
   ih-service-name           = "${var.humanReadableName}-identityhub"
 }
+
+variable "node_group_label" {
+  type        = map(string)
+  description = "Label to define nodeSelector"
+  default = {
+    role = "application"
+  }
+}

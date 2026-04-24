@@ -17,7 +17,7 @@
 #  SPDX-License-Identifier: Apache-2.0
 #
 
-resource "kubernetes_deployment" "controlplane" {
+resource "kubernetes_deployment_v1" "controlplane" {
   metadata {
     name      = "${lower(var.humanReadableName)}-controlplane"
     namespace = var.namespace
@@ -42,6 +42,7 @@ resource "kubernetes_deployment" "controlplane" {
       }
 
       spec {
+        node_selector = var.node_group_label
         container {
           name              = "connector-${lower(var.humanReadableName)}"
           image             = "150073872684.dkr.ecr.eu-west-1.amazonaws.com/kordat-dev-controlplane:latest"

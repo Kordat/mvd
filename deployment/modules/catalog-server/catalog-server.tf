@@ -17,7 +17,7 @@
 #  SPDX-License-Identifier: Apache-2.0
 #
 
-resource "kubernetes_deployment" "connector" {
+resource "kubernetes_deployment_v1" "connector" {
   metadata {
     name      = lower(var.humanReadableName)
     namespace = var.namespace
@@ -42,6 +42,7 @@ resource "kubernetes_deployment" "connector" {
       }
 
       spec {
+        node_selector = var.node_group_label
         container {
           name              = lower(var.humanReadableName)
           image             = "150073872684.dkr.ecr.eu-west-1.amazonaws.com/kordat-dev-catalog-server:latest"

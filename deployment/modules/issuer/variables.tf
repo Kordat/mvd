@@ -64,6 +64,19 @@ variable "useSVE" {
   default     = false
 }
 
+variable "image" {
+  type = string
+  description = "Docker image"
+}
+
+variable "node_group_label" {
+  type        = map(string)
+  description = "Label to define nodeSelector"
+  default = {
+    role = "application"
+  }
+}
+
 variable "vault-url" {
   description = "URL of the Hashicorp Vault"
   type        = string

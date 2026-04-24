@@ -25,7 +25,7 @@ resource "kubernetes_service" "controlplane-service" {
   spec {
     type = "NodePort"
     selector = {
-      App = kubernetes_deployment.connector.spec.0.template.0.metadata[0].labels.App
+      App = kubernetes_deployment_v1.connector.spec.0.template.0.metadata[0].labels.App
     }
     port {
       name = "health"
