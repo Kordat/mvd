@@ -166,6 +166,9 @@ resource "kubernetes_config_map" "identityhub-config" {
     EDC_DATASOURCE_DEFAULT_URL         = var.database.url
     EDC_DATASOURCE_DEFAULT_USER        = var.database.user
     EDC_DATASOURCE_DEFAULT_PASSWORD    = var.database.password
+    EDC_DATASOURCE_DEFAULT_POOL_CONNECTIONS_MAX_TOTAL = "2"
+    EDC_DATASOURCE_DEFAULT_POOL_CONNECTIONS_MAX_IDLE  = "1"
+    EDC_DATASOURCE_DEFAULT_POOL_CONNECTIONS_MIN_IDLE  = "0"
     EDC_SQL_SCHEMA_AUTOCREATE          = true
     EDC_IAM_ACCESSTOKEN_JTI_VALIDATION = true
 
